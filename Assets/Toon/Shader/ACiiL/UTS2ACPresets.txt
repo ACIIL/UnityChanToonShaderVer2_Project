@@ -1,0 +1,9 @@
+Defaults/Default Ramp
+_Color = 0.95,0.95,0.95,1
+_1st_ShadeColor = 0.945,0.945,0.945,1
+_2nd_ShadeColor = 0.925,0.925,0.925,1
+_BaseColor_Step = 0.6
+_ShadeColor_Step = 0.4
+_BaseShade_Feather = 0.001
+_1st2nd_Shades_Feather = 0.001
+

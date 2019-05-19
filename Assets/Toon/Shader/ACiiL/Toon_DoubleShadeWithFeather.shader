@@ -1,11 +1,18 @@
-﻿Shader "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather" {
-	Properties {
+Shader "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather" {
+	Properties 
+	{ 
+		[HideInInspector] shader_master_label ("UTS2 - AC", Float) = 0
+		[HideInInspector] shader_presets ("UTS2ACPresets", Float) = 0
+		[HideInInspector] footer_github("linkButton(Github,https://github.com/ACIIL/UnityChanToonShaderVer2_Project)", Float) = 0
+		// [HideInInspector] m_ ("blah", Float) = 0
+		// [HideInInspector] m_start_ ("startblah", Float) = 0
+		// [HideInInspector] m_end_ ("endblah", Float) = 0
+
 		[Enum(OFF,0,FRONT,1,BACK,2)] _CullMode	("Cull Mode", int)	= 2  //OFF/FRONT/BACK
-
-
 
 		[Space(25)]
 		[Header(Alpha mask)]
+		[HideInInspector] m_AlphaOps ("Alpha Mask Options", Float) = 0
 		_ClippingMask	("Clipping mask", 2D)								= "white" {}
 		_Clipping_Level	("Clipping level", Range(0, 1))						= 0 
 		_Tweak_transparency	("Tweak transparency", Range(-1, 1))			= 0
@@ -19,6 +26,7 @@
 
 		[Space(25)]
 		[Header(Normal map)]
+		[HideInInspector] m_NormalMap ("Normal map", Float) = 0
 		_NormalMap							("NormalMap", 2D)			= "bump" {}
 		[Toggle(_)]_Is_NormalMapToBase		("On Toon", Float )			= 0
 		[Toggle(_)]_Is_NormalMapToHighColor	("On High Color", Float )	= 0
@@ -29,6 +37,7 @@
 
 		[Space(25)]
 		[Header(Toon ramp)]
+		[HideInInspector] m_ToonRamp ("Toon ramp", Float) = 0
 		_MainTex				("Main Tex", 2D)							= "white" {}
 		_1st_ShadeMap			("1st shade Tex 1", 2D)						= "white" {}
 		_2nd_ShadeMap			("2nd shade Tex 2", 2D)						= "white" {}
@@ -46,6 +55,7 @@
 
 		[Space(25)]
 		[Header(Shadow and AO control)]
+		[HideInInspector] m_Shadow ("Shadow Options", Float) = 0
 		_Set_1st_ShadePosition 		("1st AO shade Position", 2D)					= "white" {}
 		_Set_2nd_ShadePosition 		("2nd AO shade Position", 2D)					= "white" {}
 		_shadowCastMin_black 		("Shadow minimal dark", Range(0.0,1.0))			= 0
@@ -57,6 +67,7 @@
 
 		[Space(25)]
 		[Header(High Color. Specular)]
+		[HideInInspector] m_Specular ("Specular Options", Float) = 0
 		_HighColor_Tex				("HighColor Tex albedo", 2D)				= "white" {}
 		_Set_HighColorMask			("HighColor Tex Mask", 2D)					= "white" {}
 		[Enum(Self,0,BaseTex,1)]_highColTexSource	("HighColor source", float)	= 0
@@ -72,6 +83,7 @@
 
 		[Space(25)]
 		[Header(Rimlights)]
+		[HideInInspector] m_RimLights ("Rim lights", Float) = 0
 		_Set_RimLightMask			("RimLight Tex mask", 2D)			= "white" {}
 		_Tweak_RimLightMaskLevel	("Tweak: mask", Range(-1, 1))		= 0
 		[Enum(Off,0,Add,1,Replace,2)]_RimLight		("Mix: RimLight", Float )					= 0
@@ -92,6 +104,7 @@
 
 		[Space(25)]
 		[Header(World reflection)]
+		[HideInInspector] m_Reflection ("World reflection Options", Float) = 0
 		_envRoughness	("Reflection roughness", Range(0, 1))	= 0.34
 		_envOnRim		("Reflection on rimLights", Range(0,1))	= 0.5
 
@@ -99,6 +112,7 @@
 
 		[Space(25)]
 		[Header(Matcap)]
+		[HideInInspector] m_Matcap ("Matcap", Float) = 0
 		_NormalMapForMatCap					("MatCap normalMap", 2D)					= "bump" {}
 		[Toggle(_)]_Is_NormalMapForMatCap	("Use matcap normalMap ", Float )			= 0
 		_MatCap_Sampler						("MatCap Tex albedo", 2D)					= "black" {}
@@ -117,6 +131,7 @@
 
 		[Space(25)]
 		[Header(Emission)]
+		[HideInInspector] m_Emission ("Emission", Float) = 0
 		_Emissive_Tex			("Emissive mask tex", 2D) 	= "white" {}
 		_EmissionColorTex		("Emissive color tex", 2D) 	= "white" {}
 		[HDR]_Emissive_Color	("Emissive color", Color)	= (0,0,0,1)
@@ -124,7 +139,8 @@
 
 
 		[Space(25)]
-		[Header(Use world color settings)]
+		[Header(World color settings)]
+		[HideInInspector] m_ColorSettings ("World color settings", Float) = 0
 		[Toggle(_)]_Is_LightColor_Base			("Use LightColor in Base", Float )			= 1
 		[Toggle(_)]_Is_LightColor_1st_Shade		("Use LightColor in 1st_Shade", Float )		= 1
 		[Toggle(_)]_Is_LightColor_2nd_Shade		("Use LightColor in 2nd_Shade", Float )		= 1
@@ -137,6 +153,7 @@
 
 		[Space(25)]
 		[Header(Outline)]
+		[HideInInspector] m_Outline ("Outline", Float) = 0
 		[Enum(NML,0,POS,1)] _outline_mode	("OUTLINE MODE", Int)		= 0
 		_OutlineTex						("Outline tex", 2D) 			= "white" {}
 		_Outline_Sampler				("Outline sampler", 2D)			= "white" {}
@@ -153,6 +170,7 @@
 
 		[Space(25)]
 		[Header(Stencil)]
+		[HideInInspector] m_Stencil ("Stencil", Float) = 0
 		_Offset					("Offset", float)						= 0
 		[Toggle(_)] _Stencil	("Stencil ID [0;255]", Range(0,255))	= 0
 		_ReadMask				("ReadMask [0;255]", Int)				= 255
@@ -169,7 +187,10 @@
 
 
 
-	SubShader {
+
+	CustomEditor "ThryEditor"
+	SubShader 
+	{
 		Tags {
 			"Queue"="Geometry"
 			"RenderType"="Opaque"
