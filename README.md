@@ -3,12 +3,12 @@ README.md
 
 
 # Intro:
-UTS-ac shader, a git fork of UnityChanToonShaderVer2_Project with lighting improvements and bug fixes based on the v2.0.4+ versions.
+UTS2-ac shader, a git fork of UnityChanToonShaderVer2_Project (UTS2) with lighting improvements and bug fixes based on the v2.0.4+ versions.
 Tweaks by ACiiL.
 
 https://github.com/ACIIL/UnityChanToonShaderVer2_Project
 
-Credits to the original author(s) unity3d-jp for humbly providing UTS2 open source to everyone and those that helped me develop the improvements.
+Credits to the original author(s) unity3d-jp for humbly providing UTS2 open source and those that helped me develop the improvements.
 
 https://github.com/unity3d-jp/UnityChanToonShaderVer2_Project
 
@@ -17,53 +17,43 @@ https://github.com/unity3d-jp/UnityChanToonShaderVer2_Project
 
 
 
-# Forward plan and history:
-This has a been about a year long on-and-off study project since middle of January 2018. Back then no one knew UnityChanToonShaderVer2_Project (UTS or UTS2) and it didnt work in vrchat, I was interested in making it not be broken in vrchat. Some on and off weeks heavy studying unity's hlsl i learned nearly every aspect of unity's lighting and how to correctly manipulate them for this shader. This fork is now known as UTS-ac.
-
-After some lucky back and forth on twitter with the main author of this shader i gave him my code fork and thus the main branch of UTS became functional in vrchat and i now see that shader branch used among the Japanese community and paired alongside commercial avatar models. Its kinda nice knowing i helped everyone...
-
-My UTS branch is its own separate fork. I have my own methods to approach UNITY engine's lighting system for different light types, as implementing the light types of direct (and shadows), indirect (all ambient light), reflection probes, and more requires a considerable amount of UNITY file includes study and not "node based" creation from shader forge or Amplify. To transform the the "realism" of PBR in to the "stylised" cartoon look i go for that makes my code fork different. I want to give artists the power to select UTS shader effects without disobeying unity's light system and will fight unity's include file's hell to achieve that.
-
-To those in the vrchat shader community, Thank you all. After all my study and dumb questions towards acquaintances and friends i got UTS to look right in vrchat! I hope to author my own original toon shader someday, but because how much i like UTS approch i'll likely see myself  improving aspects of UTS until its barely recognisable. 
- 
-
-
-In regards to improvements i will accept code contribution as pull requests! If you see something to improve pass me the bug fix for my fork (please use git so your work is recorded in the system!).  I will stick to github and git methodology so everything is recorded and managed.
-
-I believe UTS is one of the best approaches to toon shading with its effects, it takes the artists' toon ramps and painting, shines, rims, and matcaps and does the least random realistic and color tinting so what the artists wants they get, as well as options to disobey unity's light model if they feel evil!  
-
-Today mainline UTS has moved forward to v2.0.5+ and this little side branch of mine was for v2.0.4+. It should be possible to swap other version of UTS2 with mine for a while. 
-
-I will continue to use UTS as a playground to test out unique toon shading effects and improve the lighting model as i dig deeper into unity's includes and subsystems. I will likely keep my work to the hlsl frag/vert level and avoid GUI scripts, which means no fancy extra properties or unity GUI tabs. I will likely not overhaul unity's lighting system or parts that need C# or scripts because i tend to work in the confines of Vrchat.
-
-
-
-
-
-
 # Install: 
-Fresh user:
-In github download the zip in the latest releases tab or from the branch you selected. In the archive file you will find the asset/ folder and Manual/ documentation, Copy the Toon/  folder into your unity assets project folder.  You should now have the UnityChainToonShader/ACiiL sub menu and my fork installed for use. I do not provide support of shaders outside the UnityChainToonShader/ACiiL shader submenu folder.
+In github download the zip in the releases tab or from the branch you selected. In the zip file you will find the asset/ folder and Manual/ documentation.
+Copy the inner Toon/  folder into your unity assets\ project folder.  Your shader listing should now have UnityChainToonShader/ACiiL sub menu installed.
 
-Past users of UTS-ac:
-DO NOT override other UTS version or toon/ folder installs, purge them all if you do not use those. My folder is structured as Assets/Toon/Shader/ACiiL and the shader submenu is under UnityChainToonShader/ACiiL.
-You may have to set the new stencil options to correct defaults. Set the zwrite on for solids.
 
+Watchout when applying UTS2 to news materials for when object sorting is see-threw, fix it by setting the zwrite on.
 
 
 
 
 
-# Shader setup: 
-UTS is a very technical and manual shader compared to other toon shaders. The freedom comes with the energy cost of needing to manually balance every color aspect in the settings and how easy to do it wrong by color balance.
 
-Always read and follow the documentation for UTS2.
+# What is this and history:
+UTS2 is a extremely customizable toon shader. Its good for 2 to 5 "color tone" toony paint effects with many options which represent Unity standard shader appearance in a abstracted toony way.
+
+Today mainline UTS2 has moved forward to v2.0.5+ and this little side branch of mine was for v2.0.4+. It should be possible to swap other versions of UTS2 with mine for a while. 
+
+This has a been about a year long on-and-off study project since middle of January 2018. Back then no one knew UnityChanToonShaderVer2_Project and it didnt work in vrchat, I was interested in making it function in vrchat. Some on and off weeks studying unity's hlsl i learned unity's lighting and how to correctly manipulate them for shaders. This Study result is UTS2-AC.
+
+After some lucky back and forth with the main author of UTS2 shader i shown them my code edits and then the main branch of UTS2 became functional in vrchat. Now we see UTS2 being used freely for commercial avatar sales on Booth.pm and the general players in vrchat who like the styles UTS2 provides. 
+
+My UTS2 branch is its own separate fork. I have my own methods to approach unity engine's lighting system and my own goals to take it. I want to give artists the power to select UTS2 shader effects without disobeying unity's light system (to much) under the common bad map lighting seen in vrchat maps.
+
+In regards to community improvements i will accept code contribution as pull requests! Pass me bug fixes for my fork, preferably within github.
+
+
+
+
+
+
+# Manual: 
+Read the documentation for UTS2.
 See the latest mainline UTS2 release manual, it contain videos and examples of setup:
 
 https://github.com/unity3d-jp/UnityChanToonShaderVer2_Project/blob/master/Manual/
-https://github.com/unity3d-jp/UnityChanToonShaderVer2_Project 
 
-Note my fork is different from the mainline readme version but the great effort of unity3d-jp is admirable and helps everyone.
+Note my fork is somewhat different from the mainline readme version.
 
 
 
@@ -71,34 +61,24 @@ Note my fork is different from the mainline readme version but the great effort 
 
 
 # Shader keywords limit notes and solutions for avatar creators and shader writers.
-A common problem to all vrchat shaders is sharing the limited space of shader keywords. Roughly speaking, this is a set of unity defines to decide what code paths to follow from compiled variations. Keywords only affect the shader that needs it but share a superset of defines for some strange reason. There is a limited array of keyword spaces that cannot be managed in engine currently, the set is first-come-first-serve from game launch.
+A common problem to all vrchat shaders is sharing the limited space of shader keywords. When the limit is hit durring a play session strange visual bug will happen to new shaders loading in. The keyword space can also be flooded in your unity project avoid that by only enabling shaders you use.
 
-The keyword space can also be flooded in your unity project. It's a good reason to clean out scene materials you dont want. Assets not used should not count.
-
-
-For the end user (you the avatar creator) in vrchat there is a way to clean up unused keywords retroactively between shader changes and updates!
-
-Select your material -> set to debug by using the drop down right of the inspector tab row -> read out the keywords test box and test deleting that list. If that material looks ok after you are lucky. You may also start a new materiel if you accept losing your settings.
-
-For UTS2 you may delete this keyword list.
+# How do clean up keywords before avatar upload manually:
+There is a way to clean up unused keywords in materials between shader swaps and updates! 
+Select your material -> set debug by using the drop down gear right of the inspector tab row -> read out the "keywords" text box and test deleting that list. If things look ok after you are lucky.
 
 
 
-For shader writers, avoid methods that depend on #ifdef or create keywords. 
-
-See how i have implemented [toggle(_)] for toggles and number enum, and see how defines are limited. For toggles, use the float value of [0, 1] in your code to decide path flow or use a lerp(offValue, onValle, boolToggle) setup. 
+For shader writers, avoid methods that create keywords. See how i implemented [toggle(_)] for toggles and number enum's, and see how defines do not use 
+\#pragma shader_feature or \#pragma multi_compile
 
 
 
 
 
 
-# Features and some forks differences.
-To help reduce confusion understanding UTS for beginners I will do my best to explain common confusion. The entirety is documented in the manual which is linked and provided. This  exists to help paraphrase the massive details in the official UTS2 manual and what i know people have struggled with.
-
-
-
-UTS has a number of effects, in some order:
+# Forks differences and features.
+Details what's different in UTS2-AC. See the official UTS2 readme for everything.
 
 
 
@@ -107,107 +87,93 @@ UTS has a number of effects, in some order:
 
 
 * For alpha shaders, The alpha texture mask and settings
-  * Set the albedo texture if it has the alpha channel and checkmark to use the albedo alpha. Otherwise use a custom grayscale texture that represents the alpha.
+  * Alpha is alpha to converage, screen space alpha cutout. Use fade for best and most redundant alpha sorting and supports shadow receives and casting.
+  * Checkmark "use main texture alpha" when it has the alpha channel, otherwise use a custom grayscale texture that represents the alpha.
+  * Zwrite off may give strange invisible appearance. Default on unless you want  alphas textures that is see threw completely.
 
 
 
 * The dynamic toon ramp system
-  * Basic Shade assignment is done in two ways, you MUST assign your base textures in the 2-3 texture slots else you get solid color, define the albedo textures at: [_BaseMap,   1st_ShadeMap,   2nd_ShadeMap].
-  * What makes UTS2 unique is the 3 layer toon ramp system based on: math ramps, painted albedo textures, and ambient occlusion textures.
-  * UTS runs mix as:  (LightSide | (Tone1 | Tone3)), because of this you have many ways to set the 3 shades or abandon some.  Unlit setup is all white colors and same texture (uncheck receive shadows in mesh renderer too...). Easy toon setup is only LightSide & Tone1, were Tone2 is off with its step = 0. The advanced toon setup treats LightSide as a brighter "sunny side" color, Tone1 as a dimmer base color, and Tone2 as shadow color, to do that, match the steps at 0.5 and test you toon ramp as it receives shadow casts and look how it casts the toon.
-  * UTS promotes manual albedo texture usage in shades to give you best creative control of shading, as to manually paint in the shadow tones as an artist. If you do not want to manual paint shades you will simply use the same albedo among the shadeColor slots and pick the shadow colors to mix.
-  * The transition from light to the darker colors comes from the light direction on surfaces as dot() angles and when shadows are casting. Users manually adjust the "_step" to mark when surface angle shade begins. Blur the step with the "_feather".
-  * The "ambient occlusion" slots, "Set_N_shadePosition", are used to empower the shade transition, the blackness multiplies the lambet of light to surface as set in the _step and _feature: Where white (1) does nothing, the blacker the faster the shade transitions to shade 1 or shade 2. These two textures guide how quickly and strongly the lerped tones translate. In effect enable dynamic toon ramp shifting by light sources and allows an artist to control areas where you do not want toon shading, such as painting the face area white and the body a gray area.  You will have to paint or bake the "ambient occlusion" textures yourself; I use Blender's AO bake system to do this. If your skin texture has gradients you can grayscale it and level it to white max.
-  * For artistic and natural looking toon shading tones give it saturation and avoid gray tones. Tint the shadows in blue or red or a mix, and for light receiving side tint the effects towards yellow. When setting up UTS's shadow  albedo textures, instead of using a dark gray multiplier compliment it with a custom shadow albedo texture: copy and save your texture in photoshop or GIMP and increase the saturate about 5-15% and then set that onto the shade N textures. Its like a lazy and fast way to make shadows look more vibrant and in these ways you fake light "bouncing" and its good for skin shading.
-  * There is a minimal shadow blackness setting to reduce shadow casts on the model. I recommend using this as a toggle if you find yourself incorrectly lit in some vrchat maps. You will disobey UNITYs light model with this slider and become partly unlit as sacrifice. Its better to go to a correctly lit map.
+  * Begin with basic texture assignment. UTS2 is intended to have 3d custom edited textures however you may set the main texture and reuse with dropdowns.
+  * UTS2 has 3 concepts for light in subsets of different properties: 
+     * "Direct to light"
+	 * "Core ambient in shadow"
+	 * "Facing away from light"
+  * What makes UTS2 unique is the 3 layer toon ramp system built with: ramps, painted albedo textures, and ambient occlusion textures. Use these to strictly control how you character appears in light and shadows.
+  * UTS2 mixes shading as two lerps as:  (LightSide | (Tone1 | Tone3)). 
+     * LightSide disappears in shadow or facing away from light, depending how you setup.
+	 * (Tone 1 and 2) becomes what's in the ambient and facing away from light depending how you setup.
+  * The "ambient occlusion" slots as "Set_N_shadePosition" are used to down ramp the shading toward: 1st what is considered not direct to light, and 2nd forcing away from light shadows. You can also use the AOs to colorize areas as you wish depending how you setup.
+  * For artistic and natural looking toon shading tones, saturation the shadow colors textures (with a point editor) and shift the hue towards blue. Avoid gray tones except for metallics. 
+  * For skin ramps, down ramp the shade to the color of the skin, however saturate the color at most 15%. Remember to shift hud towards blue from red/yellow.
+  * Shadows have a minimal shadow blackness setting. Use it to ignore the extremely black contribution of dynamic shadow casts (see black shadow and no ambient light in that space). Use this when you find yourself in harsh maps without ambient lights to soften black shadows; Its a realism compromise.
 
   
   
-* My custom shadow cast and falloff system.
-  * I have customized unity's shadow casts system to behave uniquely in this UTS2 fork. I have separated the "light attenuation" from the "shadow attenuation" and can mix and override dynamic lights with separate light falloff values and shadow darkness values. 
-  * shadow casts now have a saturation setting. Use values > 1 to make surfaces look nicer in the dark, such as skin. Default: 0.5.
-  * My goal is balances unity's shadow casts to they integrate into UTS's ramps and give the control to the artist; Well also allowing functional direct shadows casts, to make an avatar black when the world intends such black shadows such as a "space" setting.
-    * Use the "Tweak_SystemShadowsLevel" slider to adjust shadow cast sensitivity to toon change. Hopefully one direction is sharper and other is softer. 
-	  * New is this now smoothly remaps only shadow casts of any strength into using the dark toon ramp tones before true black shadows reach complete blackness.
-  * Light falloff dimming is minimized to the limit of the light sphere, as to minimize toning toon colors. This is possible with my light attenuation refractor.
-  * Shadow fridge falloff is remapped, as to "push" back the blackness and let the toon shading happen before the shadow casts goes completely black, and also minimizing toning toon colors.
-  * Observe that add-pass shadows falloff in distance to light sources. Unfortunately this does for directional lights (infinite distance). This effect is possible with the light attenuation refractor.
-  * If you are using my fork you are likely here for how i rebalance the direct and indirect lighting with these light attenuation overrides.
-  * Expect improvements as i dig deeper into unity's light cast system and attempt to modernize shadow casting for toon effects.
+* Custom shadow cast and falloff system.
+  * Bit of a pain and most of my work. The entire light mixing is most of my original code in this fork.
+  * Direct and indirect light as well as vertex lights is what makes UTS2-ac a demo for how adaptable shaders can be to typical Vrchat maps that do lighting wrong and miss things.
+  * Shadow attenuation and falloff is split. From my work there is far smarter control to how light attenuation is used and mixes with ambient light.
+  * I treat dyanmic shadows as a "dynamic toon ramp" that influences the appearance over the static toon ramp.
+    * A shadow cast dynamic saturation setting - albedo color saturation goes up the stronger shadow is in dark ambiance. It looks nice, like a fake bit of light bouncing in AO corners.
+  * Light falloff dimming is minimized to the limit of the light radius, as to minimize toning toon colors. This is possible with my light attenuation refractor.
+  * to help control "shadow cast stepping" artifacts on the toon ramp, Shadow attenuation is remapped, its not perfect because there is no way to control shadow casting flaws.
+  * From my lighting refactor, point and spot light shadows weaken over distance.
 
 
   
-*  highColor. The Toon shine effect.
-  * This effect is how you enable light direction shine, to enable it, pick a color instead of black and raise the _HighColor_Power slider.
-  * Mixing has two modes: replace or add. Either case you should assign your albedo texture and color, or a custom painted albedo that looks what you want the shine to be, eg) sharp shiny corners of robots, a custom color for shiny velvet cloths that tints in many ways.
-  * I personally like to use highColor on the eyes to make them fake reflection of light. 
-  * Can be use to counter black shadow casts on the model around the eyes (if in the eye whites are holes). Use a very "rough" highColor setup to counter shadows with shadow dimming off. 
-  * HighColor has a setting to dim in shadow cast as well as the strength. This allows an ambient reflection or light penetration effect.
-  * Use highColor for where you want to express shininess or metallic surfaces.
-  * There is a mask texture for highColor.
+* (Specular) highColor. The Toon shine effect.
+  * This is specular. To enable set color tint other than black and raise the power.
+  * Mixing has two modes: replace or add. You can then leave it without texture source or give a texture to control how the specular tints. There is surprisingly a lot of control.
 
   
   
 * The RimLight. 
-  * UTS rim setup is extensive and maybe overboard but unique to UTS2. When enabled you gain settings of strength, cutoff, intensity, if it's hard or soft, or the directionality to light sources. 
-  * There is a anti rim light, Antipodean_RimLight, that works in opposite direction to rim. Use it to emulate light penetrating and moving under a surface or as artistic counter color to the main rim color. 
-  * Use rims to make skin look alive or mask glossy ambient surfaces, or for a nice "inner outline" style. In vrchat odds are you will be noticed by your rims using this shader. Which is kinda silly.
-  * There is a mask texture for rims.
-  * There is my bugfix to limit backface rimlights from stacking both rim directions and glowing.
+  * UTS rim setup choices is huge. Controls for harshness, power, falloff,etc.
+  * I have extended the rim light mixing:
+    * Mix mode is additive or replace. Use replace to setup darkern brightness.
+	* Abedo can set as a texture instead of solid tone. For example, sample the main texture with a solid Red rim color in Replace mode for a neat effect.
+	* Rim can be offset from the surface corners, combined with feature new hard rimlight edges are possible and better than the old hard edge mode.
+  * UTS2 has a anti-rim light, this grows in intensity against light. Very powerful to fake ambience or fake subsurface scattering! Use it for skin effects or glossiness.
+  * A bugfix for front and back rims stacking in two-face culling and in mirrors over the main UTS2.
 
+* World reflection.
+  * Sample the world reflect cube and set roughness.
+  * Currently acts as a grayscale mask for Rim lights. Use it make rims more lively by view angle or set rimlights for glossy appearance.
 
-
+  
+  
 * Matcap. Assign the matcap and enable. Settings allow extensive control of light mixing and texture scale. 
-  * Use matcap to fake effects like glossiness, metallics, refraction, etc.
-  * If your are seeking effects for rimlight or shininess please use the above effects first for dynamic light reaction.
+  * Use matcap to fake: glossiness, metallics, reflection, etc.
+  * For matcap that look like specular or rim lights please use the above effects for a better dynamic result. Use matcap for reflection and iridescence maps.
   * My fork adopts v2.0.5+ matcap with the camera pan correction.
-  * Matcap is additive or multiply on source.
-  * There is mask texture support.
 
 
 
-* Emission.  Fairly standard, a mask and color pick.
+* Emission. A mask texture and color texture as well as a HDR color pick for intensity.
 
 
-* TheEffects are prefaced with "LightColor" switches, thies switches the light model from world color following or presudo unlit when off. Used to override base brightness of effects.
+* "LightColor" switches, these make each effect follow the world lighting or stay static, use it for a unlit mode that reacts to light attenuation.
 
 
 
-* Outlines. In concept, outlines change thickness by distance to camera. You adjust the near and far range in object space (so it scales to the object size regardless of world space rescale)
-  * to set static outline size, set min and max distance equal.
-  * There are settings to manually give outlines custom albedo or rescale the thickness of outlines with a mask texture.
+* Outlines. Are shader pass based and not geometry. In concept outlines change thickness by distance to camera. You adjust the near and far range in object space (it scales to the object size regardless of world space rescale)
   * Outlines match the alpha of the albedo texture when shader is alpha type.
-  * Z offset: offsets outliens by camera position, which outlines are pushed more back or forwards to counter outlines clipping with spikey geometry.
-    * The bugfix in mirrors was found by me.
   * There is a minimal shadow blackness setting to remove shadow casts on the outlines.
 
 
 
 * Stencil settings are all combined into a list. 
-  * NOTICE: Feature is incomplete and i unforeseen something, here is the workaround. Stencil require two shaders with different queue order, the "hair" (the out) shader must render after the "eye" (the mask) in relative.
-    You would have to duplicate either the "eye" or "hair" shader and offset the queue between them by >= 1.
-     * To for example, copy the shader you mark as "eye", rename the file with a tag and also change the first line "Shader " with a matching name in that path, as so:
-	 
-	    "UnityChanToonShader/ACiiL/NoOutline/[your matching rename]" { ....
-		
-     * Then goto the subshader tag line and look for queue, append an offset number like "- 1" for eyes, OR only "+ 1" for hair, as so:
-	 
-	    SubShader {		Tags { "Queue"="[whatever the queue type] - 1" ....
-	 
-	 * Sorry everyone. If i include these edits the project size would bloat again.
-		
-  * Default stencils in listing order: 0, 0, 255, 255; 0, 0 , 0 ,0; 1, 4, 15. In respective properties.
-  * Zwrite off may give strange invisible appearance. Default on unless you want pass threw alphas.
-  * These properties came from my shader friends samples and dramatically shrunk the shader files count!
+  * NOTICE: Feature is incomplete from the GUI. I recommend using ThryEditor for setting a custom queue, as you will have to make sure the mask appears in queue before the pass threw shader.
   * To setup eyes passing over hair:
-	Mark you eyes with:
+	Mark you eyes with and queue before hair:
 			Stencil {
 			Ref[_StencilNo]
 			Comp Always
 			Pass Replace
 			Fail Replace
 		}
-	Mark your hair with:
+	Mark your hair with and queue after eyes:
 			Stencil {
 			Ref[_StencilNo]
 			Comp NotEqual
@@ -220,65 +186,52 @@ UTS has a number of effects, in some order:
 
 
 
-
-
-
-
-
 # Shader file usage and render error avoidances.
-
-Start by using the no-outlines version for best performance (outlines are extra passes. So i typically use it for non alpha or skin effects).
-Your default shader is: ToonColor_DoubleShadeWithFeather.
-Your clipping shader is: ToonColor_DoubleShadeWithFeather_ClippingCutout.
-Your transparency goto is ToonColor_DoubleShadeWithFeather_TransClippingFade.shader
-Real transparency with no shadows is ToonColor_DoubleShadeWithFeather_Transparent.shader
-It should be obvious which is Clipping, Fade, and Transparency.
-
-To setup alpha and clipping together, use TransClippingFade for transparency that needs shadows (Transparent never receives shadow casts). See the features guide above for settings.
+Start by using the no-outlines version for best performance (outlines are extra passes. So i typically use it for non alpha or skin materials).
+  * Your default shader is: ToonColor_DoubleShadeWithFeather.
+  * Your clipping shader is: ToonColor_DoubleShadeWithFeather_ClippingCutout.
+  * Your transparency is ToonColor_DoubleShadeWithFeather_TransClippingFade.shader
+  
+I use dither cutout alpha. It should be able to handle any alpha texture and mesh layering after a bit of calibration in the settings. You only pay the cost of a screenspace pattern and quality improves as you raise MSAA or screen resolution.
 
 
 
-Limitations of alpha. 
-Note the recommended alpha shader ToonColor_DoubleShadeWithFeather_TransClippingFade.shader has its own issues by how its implemented and how limited unity is rendering transparency. In reality its alphaTest (clip) mode and misusing the alpha channel, which many shaders use to counter unity's transparency limitations. You will have z sorting issues when this alphaTest overlays other alphaTest shaders. The sorting issue cannot be differed by changing the render queue as that creates a inner-shader conflict when overlaying the same alphaTest shader many times, or depend on exclusive queue ordering with your friends alpha shaders. 
-
-The true transparency shader will not have z sorting issues, but true transparency mode makes unity never pass receive shadow casts, thus UTS's attempts to respect the unity lighting model for direct lights  shadows (shadow receiving) is off. The compromise will make you want to set the shaders to unlit to be consistent.
-
-I plan to implement dithered transparency which is a compromise between receiving shadows, alpha, and z sorting.
+# Limitations of alpha. 
+True transparency queue shaders will not have z sorting issues, however the unity engine cannot do shadow receiving and thus dynamic toon ramps will be full bright. I made my fork use dithered cutout with alpha as a solution.
 
 
 
-Color balances and bloom solutions.
-I recommend installing the unity post processing stack in your avatar scene with bloom on and track when bloom is too strong with a default directional light and with some extra default dynamic lights and/or baked lighting. Bloom happen when HRD color values goes higher than 1.1, and you should know many maps like to push lights above this value in vrchat!
+# Color balancing and map bloom control.
+Its really easy to get the stack of effects in UTS2 to overbright. Basically dont use full white color tints on effects.
+I recommend installing unity post processing stack in your scene with bloom on and watch when bloom is too strong with a default directional light and ambience.
+Bloom happens when HRD color values goes higher than 110% and you should know many maps like to push lights above this value in vrchat! 
 
-UTS is sensitive to white albeto textures and maps that have strong direct and indirect colors. Counter the quick bloom out by using a gray base color, about 80% and lower the other color effects too. Anticipate whites in albedo will bloom before blacks, you may counter this with a inverted color gray mask that dim effects on the whites.
+So to limit blooming make your toon ramps darker than 95% luminance. Set your base color ramp to (0.95, 0.95, 0.95, 1) and go down brightness in the shadows. You will be fairly resistant to over brighting in maps and its a good average to how lambart darking in Standard shader averages.
 
-To control HDR and bloom, when picking each effects color in UTS, balance color illumination (V) when combining albedo, highColor, outlines, anti-outline, and additive matcap. Note that these effects stack and mix with: replace, add, or multiply and may push the final color into emission range. The future way to fix these effects and albeto sensitivity is rebuilding the effects with constrictive PBR math rules.
+To control specular effects you actually can go higher than 100%, just watch the bloom.
+
+If you come across very badly lit shadows in vrchat maps there is a way to compensate. Increase the "minimal shadow caster blackness" from 0 (which is natural).
 
 
 
-Outlines issues. Please default your outline color to mid gray and balance from there for contrast. Please Use outlines with Opaque mode only, outline ztest does not look right with transparent models.
-
-If you come across very badly lit vrchat maps there are ways to adjest UTS-ac to compensate. Increase the min shadow caster blackness from 0 (which is natural) and maybe uncheck all the "lightColor" options which will make you unlit. Use this as a temperately fix so you can handle being in such bad lit map.
+# Outlines setup.
+Please default your outline color to 50% bright and balance from there. Please Use outlines with Opaque mode only.
 
 
 
 
 # Bugs:
-Please send issue reports to my github page. I prefer to not get discord messages.
+Please send issue reports to my github page.
 
-Some vrchat maps are setup incorrectly, in a perfect world they obey unity's light models, where direct lights (dynamics and shadows) are counter balanced by indirect lights (ambient) and reflection sources, and balance correct post processing of eye adaptation and bloom effects for HDR practices.
+Some vrchat maps are setup light incorrectly, in a perfect world they obey unity's light models, where direct lights (dynamics and shadows) are counter balanced by indirect lights (ambient) and reflection sources, and correct post processing for HDR practices.
 
-If you come across a map too bright or shadows too black, please contact the author and promptly yell until they fix it towards standard shader. Or if the author fails to learn, go the UTS-AC properties and use all the settings that make you unlit and reduce the blackness of shadows. The responsibly of map light balancing is not on me or other shader authors that know what they are doing.
+If you come across a map too bright or shadows too black, please contact the author and promptly yell until they fix it on standard shader. For maps where standard shader avatars looks fine and UTS does not i will be interested in debugging. Provide me with the map name and author to visit.
 
-Vrchat map authors must balance maps with the standard shader: Begin by using two standard shader objects and move them around the scene, inspect their direct and indirect lighting and shadow cast/receive onto each other and judge good ambience and reflections and if the post processing is causing bloom.
+Outlines have an outstanding shadow caster bug. Directional light shadows bleed threw the outlines. Fixing will need a geometry in shadow caster rewrite.
 
-For maps where standard shader avatars looks fine and UTS does not i will be interested in debugging. Provide me with the map name and author to visit. Odds are the map is using: An unlit shader with a default directional light and shadow and an ambient blue, a point/spot light far in the distance as a sun cast, or setup eye-adaptation for common toon  shaders that clamp light intensity to (0,1) instead of full range (0, infinity).
+Stencil currently requires manual file editing.
 
-Outlines have an outstanding shadow cast bug from the base-pass directional light which all shadows bleed behind the outlines, and correct for add-pass lights (spot/point/etc). Fixing this may require an entire rewrite of the pass-based outlines into geometry and i need to study geometry shaders for that. Basically special shadow caster depth data is needed for outlines which are further out than the base passes of the body, which seems direction lights fail to capture.
-
-Stencil currently requires manual file editing. Please see the stencil category above for how to do that. Sorry.
-
-Is you model pure black when you apply UTS2 ? Default your model import settings. You want unity to calculate tangent normals.
+Is your model pure black when you apply UTS2? Default your model import settings: You want unity to calculate tangent normals.
 
 
 
@@ -286,7 +239,7 @@ Is you model pure black when you apply UTS2 ? Default your model import settings
 
 
 # Support credits to:
-Noe, TCL, June, Cubed, Silent, RetroGeo, Xiexe, Mel0n, Cibbi, Hakanai, Neitri, 1001, Kaj, Error.mdl, d4rkpl4y3r, more; and many misc shader posts among google/blogs/stack exchange/twitter/discords i cannot remember them all.
+Noe, TCL, June, Cubed, Silent, RetroGeo, Xiexe, Mel0n, Cibbi, Hakanai, Neitri, 1001, Kaj, Error.mdl, d4rkpl4y3r, poiyomi, Thryrallo, many more.
 
 
 
@@ -307,7 +260,7 @@ https://github.com/unity3d-jp/UnityChanToonShaderVer2_Project
 
 
 # License:
-I inherent the Unity-Chan Toon Shader license. In addition if you use my fork, methods, or tips please credit towards my github and name; I really appreciate citation and i will do the same. Contact me by github or twitter if you want to sort out what of this branch is fully my work.
+I inherent the Unity-Chan Toon Shader license (UCL2_0). In addition if you use my forks separate methods or tips please credit towards my github and name; I really appreciate citation and i will do the same. Contact me by discord or twitter if you want to sort out what of this code is fully my work or UTS2 original.
 
 Unity-Chan Toon Shader 2.0 is provided under the Unity-Chan License 2.0 terms.  
 Please refer to the following link for information regarding the Unity-Chan License.  
