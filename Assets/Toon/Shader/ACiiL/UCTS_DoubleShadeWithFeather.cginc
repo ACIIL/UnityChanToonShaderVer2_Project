@@ -371,11 +371,11 @@
 				VertexOutput i
 				, bool frontFace : SV_IsFrontFace ) : SV_TARGET 
 			{
-				float faceDetect			= !frontFace ^ IsInMirror();
+				// float faceDetect			= !frontFace ^ IsInMirror();
 				i.wNormal					= normalize( i.wNormal);
-				if(faceDetect) { // flip normal for back faces.
-					i.wNormal = -i.wNormal;
-				}
+				// if(faceDetect) { // flip normal for back faces.
+				// 	i.wNormal = -i.wNormal;
+				// }
 				i.biNormal					= ( i.biNormal);
 				float3 worldviewPos			= StereoWorldViewPos(i.worldPos.xyz);
 				float3 viewDirection		= normalize(worldviewPos - i.worldPos.xyz);
@@ -401,10 +401,10 @@
 							, _WorldSpaceLightPos0.w)
 					);
 #endif
-				if (faceDetect)
-				{
-					lightDir	= -lightDir;
-				}
+				// if (faceDetect)
+				// {
+				// 	lightDir	= -lightDir;
+				// }
 
 
 
@@ -754,8 +754,9 @@
 				rimlightMaskEnv				= lerp(1, rimlightMaskEnv, _envOnRim);
 				float rimArea				= (1.0 - ndov_rim);
 				rimArea 					+= _RimLightAreaOffset;
+				//// Temp mirror correction
 				// rimArea						= (frontFace) ? rimArea : 0;
-				// rimArea						= lerp(0, rimArea, saturate(ndov_rim + 1));
+				rimArea						= lerp(0, rimArea, saturate(ndov_rim + 1.1));
 				float rimLightPower			= pow(rimArea, exp2( lerp( 3, 0, _RimLight_Power )));
 				float RimLightPowerAp		= pow(rimArea, exp2( lerp( 3, 0, _Ap_RimLight_Power )));
 
