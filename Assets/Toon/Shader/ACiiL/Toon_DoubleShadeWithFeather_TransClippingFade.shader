@@ -175,8 +175,6 @@
 			"Queue"="AlphaTest+50"
 			"RenderType"="TransparentCutout"
 		}
-		AlphaToMask on
-		// AlphaToMask off
 
 
 
@@ -333,11 +331,9 @@
 			Tags {
 				"LightMode"="ShadowCaster"
 			}
-			AlphaToMask Off
-			Offset 1, 1
+			Offset 1 ,  80
 			// Cull[_CullMode]
 			Cull off
-			// Zwrite Off
 			
 			CGPROGRAM
 			#pragma vertex vert
@@ -346,7 +342,6 @@
 			#include "Lighting.cginc"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_shadowcaster
-			#define Dither
 			#include "UCTS_ShadowCaster.cginc"
 			ENDCG
 		}

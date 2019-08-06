@@ -1,4 +1,4 @@
-﻿Shader "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather" {
+﻿Shader "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather_AlphaTestDither" {
 	Properties {
 		[Enum(OFF,0,FRONT,1,BACK,2)] _CullMode	("Cull Mode", int)	= 2  //OFF/FRONT/BACK
 
@@ -169,10 +169,89 @@
 
 
 
+
 	SubShader {
 		Tags {
-			"Queue"="Geometry"
-			"RenderType"="Opaque"
+			"Queue"="AlphaTest+50"
+			"RenderType"="TransparentCutout"
+		}
+		AlphaToMask on
+
+
+
+		Pass {
+			Name "Outline"
+			Tags {
+				"LightMode" = "ForwardBase" 
+			}
+			Cull front 
+			Blend SrcAlpha OneMinusSrcAlpha
+			ZTest [_ZTest]
+			ZWrite [_ZWrite]
+
+			Stencil
+			{
+				Ref [_Stencil]
+				ReadMask [_ReadMask]
+				WriteMask [_WriteMask]
+				Comp [_StencilComp]
+				Pass [_StencilOp]
+				Fail [_StencilFail]
+				ZFail [_StencilZFail]
+			}
+			
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#include "UnityCG.cginc"
+			#include "AutoLight.cginc"
+			#include "Lighting.cginc"
+			#pragma multi_compile_fwdbase_fullshadows
+			#pragma multi_compile_fog
+			#pragma multi_compile _IS_OUTLINE_CLIPPING_YES 
+			#pragma multi_compile UNITY_PASS_FORWARDBASE
+			#define UseAlphaDither
+			#include "UCTS_Outline.cginc"
+			ENDCG
+		}
+
+
+
+		Pass {
+			Name "Outline_Delta"
+			Tags {
+				"LightMode" = "ForwardAdd" 
+			}
+			// Blend One One
+			Blend SrcAlpha One
+			Cull front
+			ZTest [_ZTest]
+			ZWrite [_ZWrite]
+
+			Stencil
+			{
+				Ref [_Stencil]
+				ReadMask [_ReadMask]
+				WriteMask [_WriteMask]
+				Comp [_StencilComp]
+				Pass [_StencilOp]
+				Fail [_StencilFail]
+				ZFail [_StencilZFail]
+			}
+			
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#include "UnityCG.cginc"
+			#include "AutoLight.cginc"
+			#include "Lighting.cginc"
+			#pragma multi_compile_fwdadd_fullshadows
+			#pragma multi_compile_fog
+			#pragma multi_compile _IS_OUTLINE_CLIPPING_YES
+			#pragma multi_compile UNITY_PASS_FORWARDADD
+			#define UseAlphaDither
+			#include "UCTS_Outline.cginc"
+			ENDCG
 		}
 
 
@@ -182,10 +261,10 @@
 			Tags {
 				"LightMode"="ForwardBase"
 			}
+			Blend SrcAlpha OneMinusSrcAlpha
 			Cull[_CullMode]
-			ColorMask [_colormask]
 			ZTest [_ZTest]
-			ZWrite on
+			ZWrite [_ZWrite]
 
 			Stencil
 			{
@@ -207,7 +286,7 @@
 			#pragma multi_compile_fwdbase_fullshadows
 			#pragma multi_compile_fog
 			#pragma multi_compile UNITY_PASS_FORWARDBASE
-			#define NotAlpha
+			#define UseAlphaDither
 			#include "UCTS_DoubleShadeWithFeather.cginc"
 			ENDCG
 		}
@@ -220,9 +299,10 @@
 				"LightMode"="ForwardAdd"
 			}
 			Cull[_CullMode]
-			Blend One One
+			// Blend One One
+			Blend SrcAlpha One
 			ZTest [_ZTest]
-			ZWrite on
+			ZWrite [_ZWrite]
 
 			Stencil
 			{
@@ -244,83 +324,8 @@
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
 			#pragma multi_compile UNITY_PASS_FORWARDADD
-			#define NotAlpha
+			#define UseAlphaDither
 			#include "UCTS_DoubleShadeWithFeather.cginc"
-			ENDCG
-		}
-
-
-
-		Pass {
-			Name "Outline"
-			Tags {
-				"LightMode" = "ForwardBase"
-			}
-			Cull Front
-			ColorMask [_colormask]
-			ZTest [_ZTest]
-			ZWrite on
-
-			Stencil
-			{
-				Ref [_Stencil]
-				ReadMask [_ReadMask]
-				WriteMask [_WriteMask]
-				Comp [_StencilComp]
-				Pass [_StencilOp]
-				Fail [_StencilFail]
-				ZFail [_StencilZFail]
-			}
-
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "AutoLight.cginc"
-			#include "Lighting.cginc"
-			#pragma multi_compile_fwdbase_fullshadows
-			#pragma multi_compile_fog
-			#pragma multi_compile UNITY_PASS_FORWARDBASE
-			#define NotAlpha
-			#include "UCTS_Outline.cginc"
-			ENDCG
-		}
-
-
-
-		Pass {
-			Name "Outline_Delta"
-			Tags {
-				"LightMode" = "ForwardAdd"
-			}
-			Cull Front
-			Blend One One
-			ColorMask [_colormask]
-			ZTest [_ZTest]
-			ZWrite on
-
-			Stencil
-			{
-				Ref [_Stencil]
-				ReadMask [_ReadMask]
-				WriteMask [_WriteMask]
-				Comp [_StencilComp]
-				Pass [_StencilOp]
-				Fail [_StencilFail]
-				ZFail [_StencilZFail]
-			}
-
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "AutoLight.cginc"
-			#include "Lighting.cginc"
-			#pragma multi_compile_fwdadd_fullshadows
-			#pragma multi_compile_fog
-			#pragma multi_compile UNITY_PASS_FORWARDADD
-			#define NotAlpha
-			#include "UCTS_Outline.cginc"
 			ENDCG
 		}
 
@@ -331,8 +336,11 @@
 			Tags {
 				"LightMode"="ShadowCaster"
 			}
+			AlphaToMask Off
 			Offset 1 ,  80
-			Cull Off
+			// Cull[_CullMode]
+			Cull off
+			// Zwrite Off
 			
 			CGPROGRAM
 			#pragma vertex vert
@@ -341,7 +349,7 @@
 			#include "Lighting.cginc"
 			#pragma fragmentoption ARB_precision_hint_fastest
 			#pragma multi_compile_shadowcaster
-			#define NotAlpha
+			#define Dither
 			#include "UCTS_ShadowCaster.cginc"
 			ENDCG
 		}

@@ -63,12 +63,16 @@
 				float4 lightPosX, float4 lightPosY, float4 lightPosZ,
 				float3 lightColor0, float3 lightColor1, float3 lightColor2, float3 lightColor3,
 				float4 lightAttenSq,
-				float3 pos, float3 normal, inout float attenVert)
+				float3 pos,
+				float3 normal,
+				out float attenVert,
+				out float3 vertTo0)
 			{
 				// to light vectors
 				float4 toLightX = lightPosX - pos.x;
 				float4 toLightY = lightPosY - pos.y;
 				float4 toLightZ = lightPosZ - pos.z;
+				vertTo0 = float3(toLightX[0], toLightY[0], toLightZ[0]);
 				// squared lengths
 				float4 lengthSq = 0;
 				lengthSq += toLightX * toLightX;
@@ -77,18 +81,12 @@
 				// don't produce NaNs if some vertex position overlaps with the light
 				lengthSq = max(lengthSq, 0.000001);
 
-				/*// NdotL.
- 				float4 ndotl = 0;
-				ndotl += toLightX * normal.x;
-				ndotl += toLightY * normal.y;
-				ndotl += toLightZ * normal.z; 
-				// correct NdotL
-				float4 corr = rsqrt(lengthSq);
-				ndotl = max (float4(0,0,0,0), ndotl * corr);*/
 				// attenuation
-				float4 atten = 1.0 / (1.0 + lengthSq * lightAttenSq);
+				float4 atten = 1.0 / (1.0 + lengthSq * lightAttenSq) -0.034;
 				attenVert = atten;
-				float4 diff = atten;
+				// float4 diff = atten;
+				float4 diff = 1;
+
 				// final color
 				float3 col = 0;
 				col += lightColor0 * diff.x;
@@ -160,10 +158,11 @@
 				// TRANSFER_VERTEX_TO_FRAGMENT(o);
 				o.pos.z					= o.pos.z + _Offset_Z * viewDirectionVP.z;
 #ifdef VERTEXLIGHT_ON
+				float3 vertTo0; 
 				o.vertexLighting		= softShade4PointLights_Atten(
 					unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0
 					, unity_LightColor[0], unity_LightColor[1], unity_LightColor[2], unity_LightColor[3]
-					, unity_4LightAtten0, o.posWorld, o.normalDir, o.attenVert);
+					, unity_4LightAtten0, o.posWorld, 0, o.attenVert, vertTo0);
 #endif					
 				return o;
 			}

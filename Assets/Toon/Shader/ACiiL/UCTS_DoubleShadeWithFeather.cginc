@@ -121,7 +121,7 @@
 			uniform half _Is_LightColor_MatCap;
 
 			uniform half _testMix;
-			static const float3 defaultLightDirection = float3(0, 1, 0);
+			static const float3 defaultLightDirection = float3(0, -1, 0);
 			static const half softGI = .98;
 
 
@@ -148,8 +148,9 @@
 				float3 GIdirection	: TEXCOORD7;
 				float2 uv			: TEXCOORD8;
 				float4 screenPos	: TEXCOORD9;
-				UNITY_SHADOW_COORDS(10)
-				UNITY_FOG_COORDS(11)
+				float3 vertTo0		: TEXCOORD10;
+				UNITY_SHADOW_COORDS(11)
+				UNITY_FOG_COORDS(12)
 			};
 
 
@@ -191,12 +192,14 @@
 				float4 lightAttenSq,
 				float3 pos,
 				float3 normal,
-				inout float attenVert)
+				out float attenVert,
+				out float3 vertTo0)
 			{
 				// to light vectors
 				float4 toLightX = lightPosX - pos.x;
 				float4 toLightY = lightPosY - pos.y;
 				float4 toLightZ = lightPosZ - pos.z;
+				vertTo0 = float3(toLightX[0], toLightY[0], toLightZ[0]);
 				// squared lengths
 				float4 lengthSq = 0;
 				lengthSq += toLightX * toLightX;
@@ -206,9 +209,10 @@
 				lengthSq = max(lengthSq, 0.000001);
 
 				// attenuation
-				float4 atten = 1.0 / (1.0 + lengthSq * lightAttenSq);
+				float4 atten = 1.0 / (1.0 + lengthSq * lightAttenSq) -0.034;
 				attenVert = atten;
-				float4 diff = atten;
+				// float4 diff = atten;
+				float4 diff = 1;
 
 				// final color
 				float3 col = 0;
@@ -347,7 +351,7 @@
 				o.vertexLighting		= softShade4PointLights_Atten(
 					unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0
 					, unity_LightColor[0], unity_LightColor[1], unity_LightColor[2], unity_LightColor[3]
-					, unity_4LightAtten0, o.worldPos, o.wNormal, o.attenVert);
+					, unity_4LightAtten0, o.worldPos, o.wNormal, o.attenVert, o.vertTo0);
 #endif					
 #ifdef UNITY_PASS_FORWARDBASE
 				o.GIdirection			= GIsonarDirection();
@@ -371,7 +375,8 @@
 				VertexOutput i
 				, bool frontFace : SV_IsFrontFace ) : SV_TARGET 
 			{
-				// float faceDetect			= !frontFace ^ IsInMirror();
+				// bool isInMirror				= IsInMirror();
+				// float faceDetect			= !frontFace ^ isInMirror;   // unity v2017.4.15f1 VFACE is backwords in mirrors. Fixed later version.
 				i.wNormal					= normalize( i.wNormal);
 				// if(faceDetect) { // flip normal for back faces.
 				// 	i.wNormal = -i.wNormal;
@@ -386,126 +391,76 @@
 				float3 normalLocal			= normalMap.rgb;
 				float3x3 tangentTransform	= float3x3( i.tangent.xyz , i.biNormal.xyz, i.wNormal);
 				float3 normalDirection		= normalize( mul( normalLocal, tangentTransform ));
-
-
-
-#ifdef UNITY_PASS_FORWARDBASE
-				float3 viewLightDirection	= normalize( UNITY_MATRIX_V[2].xyz + UNITY_MATRIX_V[1].xyz);
-				float3 lightDir				= normalize( _WorldSpaceLightPos0.xyz + (i.GIdirection) * .01 + viewLightDirection *.0001);
-#elif UNITY_PASS_FORWARDADD
-				float3 lightDir				= 
-					normalize( 
-						lerp( 
-							_WorldSpaceLightPos0.xyz
-							, _WorldSpaceLightPos0.xyz - i.worldPos.xyz
-							, _WorldSpaceLightPos0.w)
-					);
-#endif
-				// if (faceDetect)
-				// {
-				// 	lightDir	= -lightDir;
-				// }
-
-
-
-//// dot()
-				float3 useShadeNormal		= lerp( i.wNormal, normalDirection, _Is_NormalMapToBase);
-				float3 useEnvNormal			= lerp(i.wNormal, normalDirection, _Is_NormaMapToEnv);
-				float3 useHCNormal			= lerp( i.wNormal, normalDirection, _Is_NormalMapToHighColor );
-				float3 useRimLightNormal	= lerp( i.wNormal, normalDirection, _Is_NormalMapToRimLight);
-
-				// ret refract(i, n, ?)
-				float3 lightReflect		= reflect(-viewDirection, useEnvNormal);
-				float3 halfDirection	= normalize( viewDirection + lightDir);
-				float ndotl_pure		= 0.5 * dot( i.wNormal, lightDir) + 0.5;
-				float ndotv_pure		= 0.5 * dot(i.biNormal, viewDirection) + 0.5;
-				float ndotl_shade		= 0.5 * dot( useShadeNormal, lightDir) + 0.5;
-				float hdotn_highColor	= 0.5 * dot(halfDirection, useHCNormal) + 0.5;
-				float ndov_rim			= dot( useRimLightNormal, viewDirection); // 1=norm with cam, -1=not
-
-				// ndotl_shade	= DisneyDiffuse(dot(i.wNormal, viewDirection), dot( i.wNormal, lightDir), dot(lightDir, halfDirection), _SinTime.w) * 0.5  + 0.5;
-				// float3 tempR =ndotl_shade;
-
-
-
+                //// screen pos
+                float4 screenPos            = i.screenPos;
+                float4 screenUV             = screenPos / (screenPos.w + 0.00001);
+            #ifdef UNITY_SINGLE_PASS_STEREO
+                screenUV.xy     *= float2(_ScreenParams.x * 2, _ScreenParams.y);
+            #else
+                screenUV.xy     *= _ScreenParams.xy;
+            #endif
 
 
 
 //// albedo texure
-				// base albedo
-				// float4 mainTex			= tex2D( _MainTex, TRANSFORM_TEX( i.uv, _MainTex));
-				float4 mainTex			= UNITY_SAMPLE_TEX2D( _MainTex, TRANSFORM_TEX( i.uv, _MainTex));
-
-
-
-				// clip & alpha handling. Here now so clip() may interrupt flow.
+                float4 mainTex			= UNITY_SAMPLE_TEX2D( _MainTex, TRANSFORM_TEX( i.uv, _MainTex));
+//// clip & alpha handling. Here now so clip() may interrupt flow.
 #ifndef NotAlpha
-				float4 clipMask			= UNITY_SAMPLE_TEX2D_SAMPLER( _ClippingMask, _MainTex, TRANSFORM_TEX(i.uv, _ClippingMask));
-				float useMainTexAlpha	= lerp( clipMask.r, mainTex.a, _IsBaseMapAlphaAsClippingMask );
-				float alpha				= lerp( useMainTexAlpha, (1.0 - useMainTexAlpha), _Inverse_Clipping );
+                float4 clipMask			= UNITY_SAMPLE_TEX2D_SAMPLER( _ClippingMask, _MainTex, TRANSFORM_TEX(i.uv, _ClippingMask));
+                float useMainTexAlpha   = (_IsBaseMapAlphaAsClippingMask) ? mainTex.a : clipMask.r;
+                float alpha             = (_Inverse_Clipping) ? (1.0 - useMainTexAlpha) : useMainTexAlpha;
 
-				float clipTest			=  (( -_Clipping_Level + alpha - 0.001));
-				clip(clipTest);
+                float clipTest          = (( -_Clipping_Level + alpha - 0.001));
+                clip(clipTest);
 
-	#ifndef IsClip
-				// dither pattern with some a2c blending.
-				// citation to Silent and Xiexe for guidance and research documentation.
-				clipTest				= saturate(( alpha + _Tweak_transparency));
-				float4 screenPos		= i.screenPos;
-				float4 screenUV			= screenPos / (screenPos.w + 0.00001);
+    #ifndef IsClip
+                // dither pattern with some a2c blending.
+                // citation to Silent and Xiexe for guidance and research documentation.
+                clipTest        = saturate(( alpha + _Tweak_transparency));
+                alpha           = clipTest;
+        #ifdef UseAlphaDither
+                //// dither hard ~16 states & matching shadow caster dither. Con. creates alpha banding
+                float dither    = tex3D(_DitherMaskLOD, float3(screenUV.xy * .25, alpha * .99), 0,0).a;
+                alpha           = dither;
+                clip(alpha -1);
+        #endif //// UseAlphaDither
+                alpha           = saturate(alpha);
 
-			#ifdef UNITY_SINGLE_PASS_STEREO
-				screenUV.xy *= float2(_ScreenParams.x * 2, _ScreenParams.y);
-			#else
-				screenUV.xy *= _ScreenParams.xy;
-			#endif
+                ////////////////
+                //////////////// Alternative dither methods
+                // {
+                //     // // dither noise based on pos. a2c best but always noisy.
+                //     alpha            = saturate(( alpha + _Tweak_transparency));
+                //     float dither     = hash13(i.worldPos * 50);
+                //     // float dither  = rand3(i.worldPos * 50);
+                //     float alpha2     = saturate(alpha * alpha);
+                //     float amix       = lerp(dither*(1-alpha), dither*alpha, 1-alpha2);
+                //     alpha            = (amix) + alpha;
+                //     alpha            = saturate(alpha);
+                // }
+                ////////////////
+                ////////////////
+                // {
+                    // // hard dither pattern. Bad A2C support.
+                //     clipTest         = saturate(( alpha + _Tweak_transparency));
+                //     float dither     = tex3D(_DitherMaskLOD,
+                //                                 float3(screenUV.x * _ScreenParams.x*.25, screenUV.y * _ScreenParams.y*.25, clipTest * .99), 0,0).a;
+                //     // float dither  = tex3D(_DitherMaskLOD, float3(screenUV.xy * .25, clipTest * 0.9375)).a;
 
-				alpha					= clipTest;
-				// float alpha2			= saturate(alpha * alpha);
-				float dither			= tex3D(_DitherMaskLOD, float3(screenUV.xy * .25, alpha * .99), 0,0).a;
-				// float amix				= lerp(dither, 0.5*dither+alpha, alpha);
-				// float amix				= 0.5*dither + alpha;
-				alpha					= dither;
-				clip(alpha -1);
-				alpha					= saturate(alpha);
-				// testVar					= float4(dither.xxx,1);
-
-				// {
-				// 	// // dither noise based on pos. a2c best but always noisy.
-				// 	alpha					= saturate(( alpha + _Tweak_transparency));
-				// 	float dither			= hash13(i.worldPos * 50);
-				// 	// float dither			= rand3(i.worldPos * 50);
-				// 	float alpha2			= saturate(alpha * alpha);
-				// 	float amix				= lerp(dither*(1-alpha), dither*alpha, 1-alpha2);
-				// 	alpha					= (amix) + alpha;
-				// 	alpha					= saturate(alpha);
-				// 	// testVar					=0;
-				// }
-
-
-				// {
-					// // hard dither pattern. Bad A2C support.
-				// 	clipTest				= saturate(( alpha + _Tweak_transparency));
-				// 	float4 screenPos		= i.screenPos;
-				// 	float4 screenUV			= screenPos / (screenPos.w);
-				// 	float dither			= tex3D(_DitherMaskLOD,
-				// 								float3(screenUV.x * _ScreenParams.x*.25, screenUV.y * _ScreenParams.y*.25, clipTest * .99), 0,0).a;
-				// 	// float dither			= tex3D(_DitherMaskLOD, float3(screenUV.xy * .25, clipTest * 0.9375)).a;
-
-				// 	float alpha2			= saturate(alpha * alpha);
-				// 	// float amix				= lerp(dither*(1-alpha), dither*alpha, 1-alpha2);
-				// 	// alpha					=  amix + alpha;
-				// 	// alpha					=  0.5 * (dither + alpha);
-				// 	alpha = dither;
-				// 	alpha					= saturate(alpha);
-				// 	testVar = float4(dither.xxx,1);
-				//
-	#else
-				alpha					= 1;
-	#endif
+                //     float alpha2     = saturate(alpha * alpha);
+                //     // float amix    = lerp(dither*(1-alpha), dither*alpha, 1-alpha2);
+                //     // alpha         =  amix + alpha;
+                //     // alpha         =  0.5 * (dither + alpha);
+                //     alpha = dither;
+                //     alpha            = saturate(alpha);
+                ////////////////
+                ////////////////
+    #else //// IsClip
+                alpha           = 1;
+    #endif //// IsClip
 #else
-				float alpha		= 1;
-#endif
+                float alpha     = 1;
+#endif //// NotAlpha
 
 
 				float4 shadeMapTex_1	= UNITY_SAMPLE_TEX2D_SAMPLER( _1st_ShadeMap, _MainTex, TRANSFORM_TEX( i.uv, _1st_ShadeMap));
@@ -559,16 +514,17 @@
 				shadowAtten				= max(shadowAtten, i.attenVert);
 				float nLightAtten		= 1 - lightAtten;
 				float nShadowAtten		= 1 - shadowAtten;
-				float attenRampB		= ( (-(nLightAtten * nLightAtten) + 1));
+				// float attenRampB		= ( (-(nLightAtten * nLightAtten) + 1));
 				float shadowAttenB		= ( (-(nShadowAtten * nShadowAtten) + 1));
-				float attenRamp			= attenRampB;
+				float attenRamp			= lightAtten;
+				// float shadowAttenB		= shadowAtten;
 
 
 
 
 
 
-//// Mix light input colors
+//// Light input colors
 				//const half shadowRings			= .15;
 #ifdef UNITY_PASS_FORWARDBASE
 				//float shadRings		= (ceil( shadowAttenB / shadowRings) * (shadowRings));
@@ -585,7 +541,8 @@
 				float lightDirGray		=  dot(_LightColor0.rgb,	1);
 				float lightInDirGray	=  dot(lightIndirect.rgb,	1);
 				float colorIntSignal	= (smoothstep(0, lightDirGray, lightInDirGray));
-				float3 lightColorFinal	= (lightDirect + lightIndirect) + (i.vertexLighting * i.attenVert);
+				float3 vertexLit		= i.vertexLighting * i.attenVert;
+				float3 lightColorFinal	= lightDirect + lightIndirect + vertexLit;
 
 #elif UNITY_PASS_FORWARDADD
 				//float shadRings		= ceil( shadowAttenB / shadowRings) * shadowRings;
@@ -614,7 +571,67 @@
 
 
 
-//// toon Lambert
+//// Light Direction vectors
+#ifdef UNITY_PASS_FORWARDBASE
+				float3 viewLightDirection	= normalize( UNITY_MATRIX_V[2].xyz + UNITY_MATRIX_V[1].xyz);
+				float3 lightDir				= normalize( _WorldSpaceLightPos0.xyz * dot(1, lightDirect) + (i.GIdirection) * dot(1, lightIndirect) + dot(1, vertexLit) * (i.vertTo0) + viewLightDirection *.0001);
+				// float3 lightDir				= normalize( _WorldSpaceLightPos0.xyz + (i.GIdirection) * .01 + viewLightDirection *.0001);
+#elif UNITY_PASS_FORWARDADD
+				float3 lightDir				= 
+					normalize( 
+						lerp( 
+							_WorldSpaceLightPos0.xyz
+							, _WorldSpaceLightPos0.xyz - i.worldPos.xyz
+							, _WorldSpaceLightPos0.w)
+					);
+#endif
+				// if (faceDetect)
+				// {
+				// 	lightDir	= -lightDir;
+				// }
+
+
+
+//// dot()
+				float3 useShadeNormal		= lerp(i.wNormal, normalDirection, _Is_NormalMapToBase);
+				float3 useEnvNormal			= lerp(i.wNormal, normalDirection, _Is_NormaMapToEnv);
+				float3 useHCNormal			= lerp(i.wNormal, normalDirection, _Is_NormalMapToHighColor );
+				float3 useRimLightNormal	= lerp(i.wNormal, normalDirection, _Is_NormalMapToRimLight);
+
+				// ret refract(i, n, ?)
+				float3 lightReflect		= reflect(-viewDirection, useEnvNormal);
+				float3 halfDirection	= normalize(viewDirection + lightDir);
+				float ndotl_pure		= 0.5 * dot(i.wNormal, lightDir) + 0.5;
+				float bdotv_pure		= 0.5 * dot(i.biNormal, viewDirection) + 0.5;
+				float ndotl_shade		= 0.5 * dot(useShadeNormal, lightDir) + 0.5;
+				float hdotn_highColor	= 0.5 * dot(halfDirection, useHCNormal) + 0.5;
+				float ndov_rim			= dot(useRimLightNormal, viewDirection); // 1=norm with cam, -1=not
+
+				// ndotl_shade	= DisneyDiffuse(dot(i.wNormal, viewDirection), dot( i.wNormal, lightDir), dot(lightDir, halfDirection), _SinTime.w) * 0.5  + 0.5;
+				// float3 tempR =ndotl_shade;
+
+
+
+
+
+//// Reflection
+				Unity_GlossyEnvironmentData envData;
+				envData.roughness		= _envRoughness;
+				envData.reflUVW			= BoxProjection(lightReflect, i.worldPos
+											, unity_SpecCube0_ProbePosition
+											, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);
+				float3 envMask			= Unity_GlossyEnvironment(
+						UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
+				); // unity_SpecCube0_HDR.a
+				float envGray		= LinearRgbToLuminance(envMask);
+				envMask				= lerp(1, envGray, smoothstep(0, .2, envGray));
+
+
+
+
+
+
+//// Toon Lambert
 				// Lambert & shadow attenuation mix
 				float4 shadowTex_1	= UNITY_SAMPLE_TEX2D( _Set_1st_ShadePosition, TRANSFORM_TEX( i.uv, _Set_1st_ShadePosition));
 				float4 shadowTex_2	= UNITY_SAMPLE_TEX2D_SAMPLER( _Set_2nd_ShadePosition, _Set_1st_ShadePosition, TRANSFORM_TEX( i.uv, _Set_2nd_ShadePosition));
@@ -654,7 +671,7 @@
 
 
 
-//// albedo textures
+//// Albedo textures
 				// is using world color
 				float3 baseColor_isLC	= lerp(attenRamp, set_LightColor, _Is_LightColor_Base);
 				float3 shadeColor1_isLC	= lerp(attenRamp, set_LightColor, _Is_LightColor_1st_Shade);
@@ -700,22 +717,6 @@
 				satMix_1_23				= HSVToRGB( float3(albedoHSV.x, ( albedoHSV.y * colSateOffset ), albedoHSV.z));
 
 				float3 shadeColor		= satMix_1_23 * satNoMix_1_23;
-
-
-
-
-
-//// Reflection
-				Unity_GlossyEnvironmentData envData;
-				envData.roughness		= _envRoughness;
-				envData.reflUVW			= BoxProjection(lightReflect, i.worldPos
-											, unity_SpecCube0_ProbePosition
-											, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);
-				float3 envMask			= Unity_GlossyEnvironment(
-						UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData
-				); // unity_SpecCube0_HDR.a
-				float envGray		= LinearRgbToLuminance(envMask);
-				envMask				= lerp(1, envGray, smoothstep(0, .2, envGray));
 
 
 
@@ -790,16 +791,16 @@
 					rimlightApMaskSetup	= step( _RimLight_InsideMask, RimLightPowerAp);
 				}
 
-				rimlightMaskSetup		= saturate(rimlightMaskSetup);
+				rimlightMaskSetup		= saturate( rimlightMaskSetup);
 				rimlightApMaskSetup		= saturate( rimlightApMaskSetup);
-
 				float4 rimLightMaskTex		= UNITY_SAMPLE_TEX2D_SAMPLER( _Set_RimLightMask, _MainTex, TRANSFORM_TEX( i.uv, _Set_RimLightMask));
 				float rimLightTexMask		= saturate( rimLightMaskTex.g + _Tweak_RimLightMaskLevel);
-				// float rimlightMaskToward	= saturate( rimlightMaskSetup - ((1.0 - ndotl_pure) + _Tweak_LightDirection_MaskLevel));
 				float rimlightMaskToward	= saturate( rimlightMaskSetup + (ndotl_pure - 1.0 - _Tweak_LightDirection_MaskLevel));
 				float rimLightMaskAway		= ndotl_pure + _Tweak_LightDirection_MaskLevel;
 				float rimLightMask			= lerp( rimlightMaskSetup, rimlightMaskToward, _LightDirection_MaskOn);
-				float rimlightApMask		= saturate( rimlightApMaskSetup - rimLightMaskAway);
+				// float rimlightApMask		= saturate( rimlightApMaskSetup - rimLightMaskAway);
+				// rimlightApMask				= lerp( rimlightApMask, saturate(rimlightApMask - rimlightMaskToward), smoothstep(0,1,rimlightMaskToward ));
+				float rimlightApMask		= saturate( rimlightApMaskSetup - rimLightMaskAway - rimlightMaskToward);	// Todo: improve rim away
 				rimLightMask				*= rimLightTexMask;
 				rimlightApMask				*= rimLightTexMask;
 

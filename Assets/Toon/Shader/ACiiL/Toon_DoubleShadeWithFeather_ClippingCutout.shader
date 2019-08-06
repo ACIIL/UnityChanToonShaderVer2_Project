@@ -186,7 +186,7 @@
 			Cull[_CullMode]
 			ColorMask [_colormask]
 			ZTest [_ZTest]
-			ZWrite [_ZWrite]
+			ZWrite on
 
 			Stencil
 			{
@@ -223,7 +223,7 @@
 			Blend One One
 			Cull[_CullMode]
 			ZTest [_ZTest]
-			ZWrite [_ZWrite]
+			ZWrite on
 
 			Stencil
 			{
@@ -259,7 +259,7 @@
 			}
 			Cull Front
 			ZTest [_ZTest]
-			ZWrite [_ZWrite]
+			ZWrite on
 
 			Stencil
 			{
@@ -297,7 +297,7 @@
 			Blend One One
 			Cull Front
 			ZTest [_ZTest]
-			ZWrite [_ZWrite]
+			ZWrite on
 
 			Stencil
 			{
@@ -329,7 +329,7 @@
 			Tags {
 				"LightMode"="ShadowCaster"
 			}
-			Offset 1, 1
+			Offset 1 ,  80
 			Cull Off
 			
 			CGPROGRAM
