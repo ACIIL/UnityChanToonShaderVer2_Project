@@ -1,4 +1,4 @@
-﻿Shader "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather" {
+﻿Shader "UnityChanToonShader/ACiiL/NoOutline/ToonColor_DoubleShadeWithFeather_AlphaTestDither" {
 	Properties {
 		[Enum(OFF,0,FRONT,1,BACK,2)] _CullMode	("Cull Mode", int)	= 2  //OFF/FRONT/BACK
 
@@ -136,22 +136,6 @@
 
 
 		[Space(25)]
-		[Header(Outline)]
-		[Enum(NML,0,POS,1)] _outline_mode	("OUTLINE MODE", Int)		= 0
-		_OutlineTex						("Outline tex", 2D) 			= "white" {}
-		_Outline_Sampler				("Outline sampler", 2D)			= "white" {}
-		_Outline_Color					("Outline color", Color)		= (0.5,0.5,0.5,1)
-		[Toggle(_)]_Is_BlendBaseColor	("Is Blend base color", Float )	= 0
-		[Toggle(_)]_Is_OutlineTex	("Is outline Tex", Float )			= 0
-		_Outline_Width				("Outline width", Float )			= 1
-		_Nearest_Distance			("Nearest distance", Float )		= 0.5
-		_Farthest_Distance			("Farthest distance", Float )		= 10
-		_Offset_Z					("Offset Camera Z depth", Float) 	= 0
-		_OutlineshadowCastMin_black	("outline Shadow minimal dark", Range(0.0,1.0))	= 0.0
-
-
-
-		[Space(25)]
 		[Header(Stencil)]
 		_Offset					("Offset", float)						= 0
 		[Toggle(_)] _Stencil	("Stencil ID [0;255]", Range(0,255))	= 0
@@ -169,182 +153,17 @@
 
 
 
+
 	SubShader {
 		Tags {
-			"Queue"="Geometry"
-			"RenderType"="Opaque"
+			"Queue"="AlphaTest+50"
+			"RenderType"="TransparentCutout"
 		}
+		
 
-
-
-		Pass {
-			Name "FORWARD"
-			Tags {
-				"LightMode"="ForwardBase"
-			}
-			Cull[_CullMode]
-			ColorMask [_colormask]
-			ZTest [_ZTest]
-			ZWrite on
-
-			Stencil
-			{
-				Ref [_Stencil]
-				ReadMask [_ReadMask]
-				WriteMask [_WriteMask]
-				Comp [_StencilComp]
-				Pass [_StencilOp]
-				Fail [_StencilFail]
-				ZFail [_StencilZFail]
-			}
-
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "AutoLight.cginc"
-			#include "Lighting.cginc"
-			#pragma multi_compile_fwdbase_fullshadows
-			#pragma multi_compile_fog
-			#pragma multi_compile UNITY_PASS_FORWARDBASE
-			#define NotAlpha
-			#include "UCTS_DoubleShadeWithFeather.cginc"
-			ENDCG
-		}
-
-
-
-		Pass {
-			Name "FORWARD_DELTA"
-			Tags {
-				"LightMode"="ForwardAdd"
-			}
-			Cull[_CullMode]
-			Blend One One
-			ZTest [_ZTest]
-			ZWrite on
-
-			Stencil
-			{
-				Ref [_Stencil]
-				ReadMask [_ReadMask]
-				WriteMask [_WriteMask]
-				Comp [_StencilComp]
-				Pass [_StencilOp]
-				Fail [_StencilFail]
-				ZFail [_StencilZFail]
-			}
-
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "AutoLight.cginc"
-			#include "Lighting.cginc"
-			#pragma multi_compile_fwdadd_fullshadows
-			#pragma multi_compile_fog
-			#pragma multi_compile UNITY_PASS_FORWARDADD
-			#define NotAlpha
-			#include "UCTS_DoubleShadeWithFeather.cginc"
-			ENDCG
-		}
-
-
-
-		Pass {
-			Name "Outline"
-			Tags {
-				"LightMode" = "ForwardBase"
-			}
-			Cull Front
-			ColorMask [_colormask]
-			ZTest [_ZTest]
-			ZWrite on
-
-			Stencil
-			{
-				Ref [_Stencil]
-				ReadMask [_ReadMask]
-				WriteMask [_WriteMask]
-				Comp [_StencilComp]
-				Pass [_StencilOp]
-				Fail [_StencilFail]
-				ZFail [_StencilZFail]
-			}
-
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "AutoLight.cginc"
-			#include "Lighting.cginc"
-			#pragma multi_compile_fwdbase_fullshadows
-			#pragma multi_compile_fog
-			#pragma multi_compile UNITY_PASS_FORWARDBASE
-			#define NotAlpha
-			#include "UCTS_Outline.cginc"
-			ENDCG
-		}
-
-
-
-		Pass {
-			Name "Outline_Delta"
-			Tags {
-				"LightMode" = "ForwardAdd"
-			}
-			Cull Front
-			Blend One One
-			ColorMask [_colormask]
-			ZTest [_ZTest]
-			ZWrite on
-
-			Stencil
-			{
-				Ref [_Stencil]
-				ReadMask [_ReadMask]
-				WriteMask [_WriteMask]
-				Comp [_StencilComp]
-				Pass [_StencilOp]
-				Fail [_StencilFail]
-				ZFail [_StencilZFail]
-			}
-
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "AutoLight.cginc"
-			#include "Lighting.cginc"
-			#pragma multi_compile_fwdadd_fullshadows
-			#pragma multi_compile_fog
-			#pragma multi_compile UNITY_PASS_FORWARDADD
-			#define NotAlpha
-			#include "UCTS_Outline.cginc"
-			ENDCG
-		}
-
-
-
-		Pass {
-			Name "ShadowCaster"
-			Tags {
-				"LightMode"="ShadowCaster"
-			}
-			Offset 1 ,  80
-			Cull Off
-			
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-			#include "Lighting.cginc"
-			#pragma fragmentoption ARB_precision_hint_fastest
-			#pragma multi_compile_shadowcaster
-			#define NotAlpha
-			#include "UCTS_ShadowCaster.cginc"
-			ENDCG
-		}
+		UsePass "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather_AlphaTestDither/FORWARD"
+		UsePass "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather_AlphaTestDither/FORWARD_DELTA"
+		UsePass "UnityChanToonShader/ACiiL/Toon_DoubleShadeWithFeather_AlphaTestDither/SHADOWCASTER"
 	}
 	FallBack "Legacy Shaders/VertexLit"
 }
